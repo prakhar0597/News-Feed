@@ -1,0 +1,1292 @@
+<html>
+<head>
+  <title>HW_6</title>
+  <script src="https://d3js.org/d3.v4.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Georgia, 'Times New Roman', Times, serif;
+
+    }
+
+    hr {
+      border-top: 1px dashed #C0C0C0;
+
+    }
+
+    input {
+      border: none;
+    }
+
+    #show_more {
+      border: none;
+    }
+
+    #show_less {
+      border: none;
+    }
+
+    .bar:hover {
+      box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    #slide_show {
+      position: relative;
+      cursor: pointer;
+    }
+
+    #slide_show #fill {
+      position: absolute;
+
+      bottom: 0;
+      background: rgb(0, 0, 0);
+      background: rgba(0, 0, 0, 0.5);
+      color: #f1f1f1;
+      width: 100%;
+      margin-left: 15px;
+      margin-bottom: 0px;
+    }
+
+    #slide_show #fill1 {
+      position: absolute;
+      bottom: 0;
+      background: rgb(0, 0, 0);
+      background: rgba(0, 0, 0, 0.5);
+      color: #f1f1f1;
+      width: 100%;
+      margin-left: 15px;
+      margin-bottom: 0px;
+    }
+
+    .bar {
+
+      cursor: pointer;
+
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    .box {
+      position: relative;
+    }
+
+    .text-block {
+      position: absolute;
+      padding-left: 20px;
+      padding-right: 20px;
+      bottom: 20px;
+      right: 20px;
+      background-color: black;
+      color: white;
+
+    }
+
+    .card {
+      width: 150px;
+      cursor: pointer;
+    }
+
+    .cross {
+      cursor: pointer;
+
+    }
+
+    .container {
+      padding: 2px 16px;
+    }
+
+    .mand {
+      color: red;
+
+    }
+
+    div.details {
+      background-color: rgb(245, 245, 245);
+      font-size: 12px;
+      font-weight: 500;
+
+    }
+
+    #cen {
+      text-align: center;
+    }
+
+    #show_more {
+      text-align: center;
+    }
+
+    #show_less {
+      text-align: center;
+    }
+
+
+    #slide {
+      float: right;
+    }
+
+    .card_2 {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      transition: 0.3s;
+      width: 150px;
+    }
+
+    .card_2:hover {
+      box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    }
+
+
+    .container_2 {
+      padding: 2px 16px;
+    }
+
+    .green:hover {
+      background-color: rgb(119, 169, 100) !important;
+    }
+  </style>
+
+</head>
+
+<body>
+  <script>
+    function hide_goog() {
+      document.getElementById("Google_news").style.display = "none";
+      document.getElementById("Search").style.display = "initial";
+    }
+  </script>
+
+  <div id="Google_news">
+    <table width="100%" cellspacing="0" cellpadding="0">
+
+      <tr>
+        <td height="15px">&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td width="778">
+          <table width="100%" cellspacing="0" cellpadding="0">
+            <tr>
+              <td width="18%" style="position: fixed;"><span class="green"
+                  style="background-color: rgb(105, 104, 104); display: inline-block;  padding: 10px;  border-top-left-radius : 3px; border-top-right-radius: 3px; color: white; font-size: 13px;">&nbsp;&nbsp;&nbsp;&nbsp;Google
+                  News&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <br>
+                <span onclick="hide_goog()" class="green"
+                  style="background-color:rgb(240,240,240); display: inline-block;  padding: 10px; border-bottom-left-radius : 4px; border-bottom-right-radius: 4px ; font-size: 13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Search&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              </td>
+              <td width="48%" style="vertical-align: top;">
+                <div id="slide_show" class="box" style="height: 210;" onclick="get_page(this)"><a href=""></a></div>
+              </td>
+              <td width="34%">
+                <table width="100%" cellspacing="0" cellpadding="0">
+                  <td width="8%"></td>
+                  <td width="92%">
+                    <div id="word_cloud" style="background-color: #f3f3f3;"></div>
+                  </td>
+                </table>
+                <div id="word_cloud" style="background-color: rgb(218, 214, 214);"></div>
+              </td>
+            </tr>
+            <tr>
+              <td width="100%" colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+              <td width="100%" colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+              <td width="18%">&nbsp;</td>
+              <td width="82%" colspan="2" style="text-align: center; font-size: 24px; font-weight: 900;"><span
+                  id="cnn"></span></td>
+            </tr>
+            <tr>
+              <td width="18%">&nbsp;</td>
+              <td width="82%" colspan="2"><span class="rule"></span></td>
+            </tr>
+            <tr>
+              <td width="18%">&nbsp;</td>
+              <td width="82%" colspan="2">
+                <div style="width: 100%;" id="parent">
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td width="100%" colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+              <td width="18%">&nbsp;</td>
+              <td width="82%" colspan="2" style="text-align: center; font-size: 24px;  font-weight: 900;"><span
+                  id="fox"></span></td>
+            </tr>
+            <tr>
+              <td width="18%">&nbsp;</td>
+              <td width="82%" colspan="2"><span class="rule"></span></td>
+            </tr>
+            <tr>
+              <td width="18%">&nbsp;</td>
+              <td width="82%" colspan="2">
+                <div style="width: 100%;" id="parent1">
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="24">&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+    <script type="text/javascript">
+      url = "/tod";
+      var imgArray = [], title_word = [], desc_word = [], link_show = [], curIndex = 0;
+      xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("GET", url, true);
+      xmlhttp.onreadystatechange = function (e) {
+        if (this.readyState == 4 && this.status == 200) {
+          jsonObj = JSON.parse(this.responseText);
+          newzzz = jsonObj.articles;
+          var k = 0;
+          for (i = 0; i < newzzz.length; i++) {
+            newzzzNodeList = newzzz[i];
+            var newzzz_keys = Object.keys(newzzzNodeList);
+            var azz, dzz, pzz, tzz, uzz, utmzz, s_izz, s_nzz;
+            for (j = 0; j < newzzz_keys.length; j++) {
+              prop = newzzz_keys[j];
+              if (newzzz_keys[j] == "author") {
+                azz = newzzzNodeList[prop];
+              }
+              else if (newzzz_keys[j] == "description") {
+                dzz = newzzzNodeList[prop];
+              }
+              else if (newzzz_keys[j] == "publishedAt") {
+                pzz = newzzzNodeList[prop];
+              }
+              else if (newzzz_keys[j] == "title") {
+                tzz = newzzzNodeList[prop];
+              }
+              else if (newzzz_keys[j] == "url") {
+                uzz = newzzzNodeList[prop];
+              }
+              else if (newzzz_keys[j] == "urlToImage") {
+                utmzz = newzzzNodeList[prop];
+              }
+            }
+            if (azz != null && azz != "null" && azz != "" && dzz != null && dzz != "null" && dzz != "" && pzz != null && tzz != null && uzz != null && utmzz != null) {
+              imgArray.push(utmzz);
+              title_word.push(tzz);
+              desc_word.push(dzz);
+              link_show.push(uzz);
+              k += 1;
+              if (k == 5) {
+                break;
+              }
+            }
+
+          }
+        }
+      }
+      try {
+        xmlhttp.send();
+      }
+      catch
+      {
+
+      }
+      var img = document.createElement('img');
+      img.setAttribute('id', 'slide');
+      img.style.width = "358px";
+      img.style.height = "210px";
+      document.getElementById('slide_show').appendChild(img);
+
+      var cont_div = document.createElement('div');
+      cont_div.setAttribute('id', 'trans_con');
+      cont_div.style.paddingBottom = "3px";
+      document.getElementById('slide_show').appendChild(cont_div);
+
+      var text_head = document.createElement('h1');
+      text_head.setAttribute('id', 'fill1');
+      text_head.style.width = "358px";
+      text_head.innerHTML = "";
+      document.getElementById('trans_con').appendChild(text_head);
+
+      var text_para = document.createElement('p');
+      text_para.setAttribute('id', 'fill');
+      text_para.style.width = "358px";
+      text_para.innerHTML = "";
+      text_para.style.paddingBottom = "6px";
+      document.getElementById('trans_con').appendChild(text_para);
+
+      imgDuration = 8;
+
+      function slideShow() {
+        document.getElementById('slide').src = imgArray[curIndex];
+        document.getElementById('fill').innerHTML = "<h4 style='text-align: center; margin-Top: 2px; margin-bottom: 11px'>" + title_word[curIndex] + "</h5>" + "<div style = 'text-align: center; font-size: 11px;'>" + desc_word[curIndex] + "</div>";
+        document.getElementById("slide_show").childNodes[0].setAttribute("href", link_show[curIndex]);
+        curIndex++;
+        if (curIndex == imgArray.length) {
+          curIndex = 0;
+        }
+        setTimeout("slideShow()", imgDuration);
+        imgDuration = 3000;
+      }
+      setTimeout("slideShow()", imgDuration);
+
+      var run = document.getElementsByClassName('card');
+      var myFunction_3 = function () {
+        var att = this.getAttribute("number1");
+        window.open(att, "_blank");
+      };
+
+      for (var m = 0; m < run.length; m++) {
+        run[m].addEventListener('click', myFunction_3);
+      }
+      url = "/to";
+      xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("GET", "/to", true);
+      xmlhttp.onreadystatechange = function (e) {
+        if (this.readyState == 4 && this.status == 200) {
+          jsonObj = JSON.parse(this.responseText);
+          var myWords = jsonObj.word;
+
+          // set the dimensions and margins of the graph
+          var margin = { top: 0, right: 0, bottom: 0, left: 0 },
+            width = 239 - margin.left - margin.right,
+            height = 210 - margin.top - margin.bottom;
+
+          // append the svg object to the body of the page
+          var svg = d3.select("#word_cloud").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
+
+          // Constructs a new cloud layout instance. It run an algorithm to find the position of words that suits your requirements
+          // Wordcloud features that are different from one word to the other must be here
+          var layout = d3.layout.cloud()
+            .size([width, height])
+            .words(myWords.map(function (d) { return { text: d, size: 10 + Math.random() * 12 }; }))
+            .padding(3)        //space between words
+            .rotate(function () { return ~~(Math.random() * 2) * 90; })
+            .fontSize(function (d) { return d.size; })      // font size of words
+            .on("end", draw);
+          layout.start();
+
+          // This function takes the output of 'layout' above and draw the words
+          // Wordcloud features that are THE SAME from one word to the other can be here
+          function draw(words) {
+            svg
+              .append("g")
+              .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+              .selectAll("text")
+              .data(words)
+              .enter().append("text")
+              .style("font-size", function (d) { return d.size; })
+              .style("fill", "#000000")
+              .attr("text-anchor", "middle")
+              .style("font-family", "Impact")
+              .attr("transform", function (d) {
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+              })
+              .text(function (d) { return d.text; });
+          }
+        }
+      }
+      try {
+        xmlhttp.send();
+      }
+      catch
+      {
+
+      }
+
+      url = "/todo";
+      var counter = 0;
+      xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("GET", "/todo", true);
+      xmlhttp.onreadystatechange = function (e) {
+
+        if (this.readyState == 4 && this.status == 200) {
+          jsonObj = JSON.parse(this.responseText);
+          newzz = jsonObj.articles;
+
+          for (i = 0; i < newzz.length && i < 4; i++) {
+            counter++;
+            var div_1 = document.createElement('div');
+            div_1.setAttribute('class', "card");
+            div_1.setAttribute("number1", uz);
+            div_1.style.borderRadius = "5px";
+            div_1.style.border = "1px solid lightgrey";
+            div_1.style.backgroundColor = "rgb(240,240,240)";
+            div_1.style.height = "310px";
+            div_1.style.float = "left";
+            div_1.style.lineHeight = "1.2";
+            div_1.style.width = "23.5%";
+            div_1.style.boxShadow = "1px 1px lightgrey";
+            div_1.style.margin = "0.5%";
+            div_1.style.overflow = "hidden";
+            document.getElementById('parent').appendChild(div_1);
+
+            var div_2 = document.createElement('div');
+            div_2.setAttribute("class", "container");
+            div_2.style.paddingLeft = "0px";
+            div_2.style.paddingRight = "0px";
+            div_2.style.height = "100%";
+
+            newzzNodeList = newzz[i];
+
+            var newzz_keys = Object.keys(newzzNodeList);
+            var az, dz, pz, tz, uz, utmz, s_iz, s_nz;
+            for (j = 0; j < newzz_keys.length; j++) {
+              prop = newzz_keys[j];
+
+              if (newzz_keys[j] == "urlToImage") {
+                utmz = newzzNodeList[prop];
+              }
+
+              if (newzz_keys[j] == "title") {
+                tz = newzzNodeList[prop];
+              }
+              else if (newzz_keys[j] == "description") {
+                dz = newzzNodeList[prop];
+              }
+              else if (newzz_keys[j] == "url") {
+                uz = newzzNodeList[prop];
+              }
+            }
+            var img = document.createElement('img');
+            img.src = utmz;
+            img.style.width = "149.69px";
+            img.style.borderRadius = "5px";
+            img.style.height = "90";
+            img.setAttribute("id", "myImg" + i);
+            document.getElementsByClassName('card')[i].appendChild(img);
+            document.getElementsByClassName('card')[i].appendChild(div_2);
+
+            var heading = document.createElement('h6');
+            heading.setAttribute("id", "title" + i);
+            heading.style.marginTop = "10px";
+            heading.style.marginBottom = "10px";
+            heading.style.marginLeft = "2px";
+            heading.style.marginRight = "2px";
+            heading.style.textAlign = "center";
+            heading.innerHTML = tz;
+            document.getElementsByClassName('container')[i].appendChild(heading);
+
+            var para = document.createElement('p');
+            para.setAttribute("id", "des" + i);
+            para.style.wordWrap = "break-word";
+            para.innerHTML = dz;
+            para.style.marginTop = "0px";
+            para.style.textAlign = "center";
+            para.style.fontSize = "10px";
+            document.getElementsByClassName('container')[i].appendChild(para);
+
+            div_1.setAttribute('number1', uz);
+
+            var run = document.getElementsByClassName('card');
+            var myFunction_3 = function () {
+              var att = this.getAttribute("number1");
+              window.open(att, "_blank");
+            };
+            for (var m = 0; m < run.length; m++) {
+              run[m].addEventListener('click', myFunction_3);
+            }
+          }
+        }
+      }
+      try {
+        xmlhttp.send();
+      }
+      catch
+      {
+
+      }
+      var run = document.getElementsByClassName('card');
+      var myFunction_3 = function () {
+        var att = this.getAttribute("number1");
+        window.open(att, "_blank");
+      };
+      for (var m = 0; m < run.length; m++) {
+        run[m].addEventListener('click', myFunction_3);
+      }
+
+      function get_page(a) {
+        window.open(a.childNodes[0].getAttribute("href", "_blank"));
+      }
+
+      url = "/todoo";
+      xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("GET", "/todoo", true);
+      xmlhttp.onreadystatechange = function (e) {
+        if (this.readyState == 4 && this.status == 200) {
+          jsonObj = JSON.parse(this.responseText);
+          newz = jsonObj.articles;
+
+          for (i = 0; i < newz.length && i < 4; i++) {
+            var div_1 = document.createElement('div');
+            div_1.setAttribute('class', "card");
+            div_1.style.borderRadius = "5px";
+            div_1.style.backgroundColor = "rgb(240,240,240)";
+            div_1.style.height = "310px";
+            div_1.style.boxShadow = "1px 1px lightgrey";
+            div_1.style.float = "left";
+            div_1.style.lineHeight = "1.2";
+            div_1.style.border = "1px solid lightgrey";
+            div_1.style.width = "23.5%";
+            div_1.style.margin = "0.5%";
+            div_1.style.overflow = "hidden";
+            document.getElementById('parent1').appendChild(div_1);
+
+            var div_2 = document.createElement('div');
+            div_2.setAttribute("class", "container");
+            div_2.style.paddingLeft = "0px";
+            div_2.style.paddingRight = "0px";
+
+            newzNodeList = newz[i];
+
+            var newz_keys = Object.keys(newzNodeList);
+            var d, t, utm, u;
+            for (j = 0; j < newz_keys.length; j++) {
+              prop = newz_keys[j];
+              if (newz_keys[j] == "urlToImage") {
+                utm = newzNodeList[prop];
+              }
+              if (newz_keys[j] == "title") {
+                t = newzNodeList[prop];
+              }
+              else if (newz_keys[j] == "description") {
+                d = newzNodeList[prop];
+              }
+              else if (newz_keys[j] == "url") {
+                u = newzNodeList[prop];
+              }
+            }
+            var img = document.createElement('img');
+            img.src = utm;
+            img.style.borderRadius = "5px";
+            img.style.width = "149.69px";
+            img.style.height = "90px";
+            img.setAttribute("id", "myImg" + counter + i);
+            document.getElementsByClassName('card')[counter + i].appendChild(img);
+            document.getElementsByClassName('card')[counter + i].appendChild(div_2);
+
+            var heading = document.createElement('h6');
+            heading.setAttribute("id", "title" + counter + i);
+            heading.style.marginTop = "10px";
+            heading.style.marginBottom = "10px";
+            heading.style.marginLeft = "2px";
+            heading.style.marginRight = "2px";
+            heading.style.textAlign = "center";
+            heading.innerHTML = t;
+            document.getElementsByClassName('container')[counter + i].appendChild(heading);
+
+            var para = document.createElement('p');
+            para.setAttribute("id", "des" + counter + i);
+            para.style.wordWrap = "break-word";
+            para.innerHTML = d;
+            para.style.marginTop = "0px";
+            para.style.textAlign = "center";
+            para.style.fontSize = "10px";
+            document.getElementsByClassName('container')[counter + i].appendChild(para);
+            div_1.setAttribute('number1', u);
+          }
+
+          document.getElementById('cnn').innerHTML = "CNN";
+          document.getElementById('fox').innerHTML = "Fox News";
+          var ruler = document.createElement('hr');
+          var ruler1 = document.createElement('hr');
+          document.getElementsByClassName('rule')[0].appendChild(ruler);
+          document.getElementsByClassName('rule')[1].appendChild(ruler1);
+
+          var run = document.getElementsByClassName('card');
+          var myFunction_3 = function () {
+            var att = this.getAttribute("number1");
+            window.open(att, "_blank");
+          };
+
+          for (var m = 0; m < run.length; m++) {
+            run[m].addEventListener('click', myFunction_3);
+          }
+        }
+      }
+      try {
+        xmlhttp.send();
+      }
+      catch
+      {
+
+      }
+    </script>
+  </div>
+
+  <script type="text/javascript">
+    function show_goog() {
+      document.getElementById("Google_news").style.display = "initial";
+      document.getElementById("Search").style.display = "none";
+      clear_field(document.my_form);
+    }
+    function populate(s1, s2) {
+      var x = document.getElementById(s1).selectedIndex;
+      var y = document.getElementById(s1).options;
+      var s1 = y[x].text;
+      var s2 = document.getElementById(s2);
+      s2.innerHTML = "";
+
+
+      var url = '/sources?category=' + s1;
+
+      xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("GET", url, true);
+
+      xmlhttp.onreadystatechange = function (e) {
+        if (this.readyState == 4 && this.status == 200) {
+
+          jsonObj = JSON.parse(this.responseText);
+          newz_channel = jsonObj.channel;
+
+          var k = 0;
+          var a;
+          var newOption = document.createElement('option');
+          newOption.innerHTML = "all";
+          newOption.value = "all";
+          s2.options.add(newOption);
+          for (i = 0; i < newz_channel.length; i++) {
+            channelNodeList = newz_channel[i];
+
+            var channel_keys = Object.keys(channelNodeList);
+            var newOption = document.createElement('option');
+            for (j = 0; j < channel_keys.length; j++) {
+              prop = channel_keys[j];
+
+              if (channel_keys[j] == "name") {
+
+                newOption.innerHTML = channelNodeList[prop];
+
+              }
+              if (channel_keys[j] == "id") {
+                newOption.value = channelNodeList[prop];
+              }
+
+            }
+            s2.options.add(newOption);
+          }
+        }
+      }
+      try {
+        xmlhttp.send();
+      }
+      catch
+      {
+
+      }
+    }
+
+    function get_news(obj) {
+      if (obj.reportValidity()) {
+
+        document.getElementById('list').innerHTML = "";
+
+        var keyword = obj.keyword.value;
+        var from_date = obj.from.value;
+        var to_date = obj.to.value;
+        var category = obj.content.options[obj.content.options.selectedIndex].text;
+        var sources = obj.source.options[obj.source.options.selectedIndex].value;
+        var url = '/everything?keyword=' + keyword + '&from_date=' + from_date + '&to_date=' + to_date + '&category=' + category + '&sources=' + sources;
+
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            console.log();
+            try {
+              now = document.getElementById("from").value;
+              to = document.getElementById("to").value;;
+              now = new Date(now);
+              n = now.getTime();
+              to = new Date(to);
+              t = to.getTime();
+
+              if (n - t > 0) {
+                window.alert("Incorrect time");
+              }
+              else {
+                jsonObj = JSON.parse(xmlhttp.responseText);
+                if (jsonObj["status"] == "error") {
+                  console.log("working");
+                  window.alert(jsonObj.message);
+                }
+                else {
+                  console.log(jsonObj);
+                  obtained = jsonObj.all_articles;
+
+                  if (obtained.length == 0) {
+                    var div_1 = document.createElement('p');
+                    div_1.innerHTML = "No results";
+                    div_1.style.marginLeft = "225px";
+                    document.getElementById('list').appendChild(div_1);
+                  }
+                  else {
+                    var count = 0;
+
+                    for (i = 0; i < obtained.length && i < 5; i++) {
+                      var div_1 = document.createElement('div');
+                      div_1.setAttribute('class', "bar");
+                      div_1.setAttribute('number', i);
+                      div_1.style.overflow = "hidden";
+                      div_1.style.borderRadius = "5px";
+                      div_1.style.border = "1px solid lightgrey";
+                      div_1.style.width = "90%";
+                      div_1.style.margin = "2%";
+                      div_1.style.backgroundColor = "rgb(240,240,240)";
+                      document.getElementById('list').appendChild(div_1);
+
+                      obtainedNodeList = obtained[i];
+
+                      var obtained_keys = Object.keys(obtainedNodeList);
+                      var d_f, t_f, utm_f, a_f, u_f, pat_f, s_f;
+                      for (j = 0; j < obtained_keys.length; j++) {
+                        prop = obtained_keys[j];
+                        if (obtained_keys[j] == "urlToImage") {
+                          utm_f = obtainedNodeList[prop];
+                        }
+                        else if (obtained_keys[j] == "title") {
+                          t_f = obtainedNodeList[prop];
+                        }
+                        else if (obtained_keys[j] == "description") {
+                          d_f = obtainedNodeList[prop];
+                        }
+                        else if (obtained_keys[j] == "author") {
+                          a_f = obtainedNodeList[prop];
+                        }
+                        else if (obtained_keys[j] == "url") {
+                          u_f = obtainedNodeList[prop];
+                        }
+                        else if (obtained_keys[j] == "publishedAt") {
+                          pat_f = obtainedNodeList[prop];
+                        }
+                        else if (obtained_keys[j] == "source") {
+                          b = obtainedNodeList[prop].name;
+                          s_f = b;
+                        }
+
+                      }
+
+                      var div_2 = document.createElement('div');
+                      div_2.setAttribute("class", "occupy_image");
+                      div_2.style.float = "left";
+                      div_2.style.width = "20%";
+                      document.getElementsByClassName('bar')[i].appendChild(div_2);
+
+                      var img = document.createElement('img');
+                      //console.log(utm_f)
+                      img.src = utm_f;
+                      img.style.width = "66px";
+                      img.style.height = "66px";
+                      img.style.padding = "17px";
+                      img.setAttribute("id", "Imge" + i);
+                      document.getElementsByClassName('occupy_image')[i].appendChild(img);
+
+                      var div_3 = document.createElement('div');
+                      div_3.setAttribute("class", "occupy_content");
+                      div_3.style.width = "76%";
+                      div_3.style.float = "left";
+                      div_3.style.paddingBottom = "5px";
+                      document.getElementsByClassName('bar')[i].appendChild(div_3);
+
+                      var div_4 = document.createElement('div');
+                      div_4.setAttribute("class", "cross");
+                      div_4.style.display = "none";
+                      div_4.style.paddingTop = "3px";
+                      div_4.style.width = "4%";
+                      div_4.style.float = "left";
+                      document.getElementsByClassName('bar')[i].appendChild(div_4);
+
+                      var close = document.createElement('button');
+                      close.setAttribute("id", "close" + i);
+                      close.style.marginBottom = "0px";
+                      close.style.color = "purple";
+                      close.style.fontWeight = "300";
+                      close.style.paddingTop = "5px";
+                      close.style.cursor = "pointer";
+                      close.style.paddingRight = "5px";
+                      close.innerHTML = "&#10006";
+                      close.style.paddingLeft = "0px";
+                      close.style.backgroundColor = "rgb(240,240,240)";
+                      close.style.border = "none";
+                      close.style.fontSize = "12px";
+                      document.getElementsByClassName('cross')[i].appendChild(close);
+
+                      var heading = document.createElement('h6');
+                      heading.setAttribute("id", "bold" + i);
+                      heading.style.marginTop = "10px";
+                      heading.style.marginBottom = "0px";
+                      heading.style.marginRight = "10px";
+                      heading.innerHTML = t_f;
+                      document.getElementsByClassName('occupy_content')[i].appendChild(heading);
+
+                      var div_new = document.createElement('div');
+                      div_new.setAttribute("class", "occupy_content_new");
+                      //div_3.style.height = "100%";
+                      div_new.style.display = "none";
+                      div_new.style.fontSize = "11px";
+                      div_new.style.width = "100%";
+                      div_new.style.lineHeight = "1.4";
+                      div_new.innerHTML = "<b>Author:</b>&nbsp;" + a_f + "<br>" + "<b>Source:</b>&nbsp;" + s_f + "<br>" + "<b>Date:</b>&nbsp;" + pat_f.substring(0, 10) + "<br><span style='line-height: normal'>" + d_f + "</span>";
+                      document.getElementsByClassName('occupy_content')[i].appendChild(div_new);
+
+                      var para = document.createElement('div');
+                      para.style.fontSize = "11px";
+                      para.setAttribute("class", "desc");
+                      para.style.display = "block";
+                      para.style.width = "100%";
+                      crop = d_f.match(/.{1,60}(\s|$)/g)[0];
+                      while (crop.charAt(crop.length - 1) == " " || crop.charAt(crop.length - 1) == ".")
+                        crop = crop.substring(0, crop.length - 1);
+                      para.innerHTML = crop + "...";
+                      document.getElementsByClassName('occupy_content')[i].appendChild(para);
+
+                      var div_new1 = document.createElement('div');
+                      div_new1.setAttribute("class", "occupy_content_new1");
+                      //div_3.style.height = "100%";
+                      div_new1.style.display = "none";
+                      div_new1.style.fontSize = "11px";
+                      div_new1.style.width = "100%";
+                      div_new1.innerHTML = "<br><a href='" + u_f + "'target='_blank'>See Original Post</a><br>" + "  ";
+
+                      document.getElementsByClassName('occupy_content')[i].appendChild(div_new1);
+
+                      count = count + 1;
+
+
+                    }
+                  }
+                  var elements = document.getElementsByClassName('bar');
+
+                  var myFunction = function () {
+                    var att = this.getAttribute("number");
+                    document.getElementsByClassName('desc')[att].style.display = "none";
+                    document.getElementsByClassName('cross')[att].style.display = "initial";
+                    document.getElementsByClassName('bar')[att].style.cursor = "text";
+                    document.getElementsByClassName('occupy_content_new')[att].style.display = "initial";
+                    document.getElementsByClassName('occupy_content_new1')[att].style.display = "initial";
+                  };
+
+                  for (var l = 0; l < elements.length; l++) {
+                    elements[l].addEventListener('click', myFunction);
+                  }
+
+                  var cross = document.getElementsByClassName('cross');
+                  var myFunction_2 = function () {
+                    var att = this.parentElement;
+                    att.getElementsByClassName('desc')[0].style.display = "initial";
+                    att.getElementsByClassName('cross')[0].style.display = "none";
+                    att.style.cursor = "pointer";
+                    att.getElementsByClassName('occupy_content_new')[0].style.display = "none";
+                    att.getElementsByClassName('occupy_content_new1')[0].style.display = "none";
+                    event.stopPropagation();
+                  };
+
+                  for (var m = 0; m < cross.length; m++) {
+
+                    cross[m].addEventListener('click', myFunction_2);
+                  }
+
+                  if (obtained.length > count) {
+                    var div_button = document.createElement('div');
+                    div_button.setAttribute('id', "show_more");
+                    div_button.style.border = "none";
+                    div_button.style.height = "20px";
+                    div_button.style.width = "90%"; div_1.style.borderRadius = "5px";
+                    div_1.style.border = "1px solid lightgrey";
+                    div_button.style.margin = "16px";
+                    document.getElementById('list').appendChild(div_button);
+
+                    var button_text = document.createElement('button');
+                    button_text.style.backgroundColor = "rgb(240,240,240)";
+                    button_text.innerHTML = "Show More";
+                    button_text.setAttribute("class", "green");
+                    button_text.style.fontSize = "12px";
+                    button_text.style.border = "none";
+                    document.getElementById("show_more").appendChild(button_text);
+                  }
+
+                  if (obtained.length > 5) {
+                    var flag = 0;
+                    document.getElementById("show_more").addEventListener("click", function () {
+                      document.getElementById('show_more').style.display = "none";
+                      for (i = 5; i < obtained.length; i++) {
+                        var div_1 = document.createElement('div');
+                        div_1.setAttribute('class', "bar");
+                        div_1.setAttribute('number', i);
+                        div_1.style.border = "1px solid lightgrey";
+                        div_1.style.overflow = "hidden";
+                        div_1.style.width = "90%";
+                        div_1.style.margin = "2%";
+                        div_1.style.borderRadius = "5px";
+                        div_1.style.backgroundColor = "rgb(240,240,240)";
+                        document.getElementById('list').appendChild(div_1);
+
+                        obtainedNodeList = obtained[i];
+
+                        var obtained_keys = Object.keys(obtainedNodeList);
+                        var d_f, t_f, utm_f, a_f, u_f, pat_f, s_f;
+                        for (j = 0; j < obtained_keys.length; j++) {
+                          prop = obtained_keys[j];
+                          if (obtained_keys[j] == "urlToImage") {
+                            utm_f = obtainedNodeList[prop];
+                          }
+
+                          if (obtained_keys[j] == "title") {
+                            t_f = obtainedNodeList[prop];
+                          }
+                          else if (obtained_keys[j] == "description") {
+                            d_f = obtainedNodeList[prop];
+                          }
+                          else if (obtained_keys[j] == "author") {
+                            a_f = obtainedNodeList[prop];
+                          }
+                          else if (obtained_keys[j] == "url") {
+                            u_f = obtainedNodeList[prop];
+                          }
+                          else if (obtained_keys[j] == "publishedAt") {
+                            pat_f = obtainedNodeList[prop];
+                          }
+                          else if (obtained_keys[j] == "source") {
+                            b = obtainedNodeList[prop].name;
+                            s_f = b;
+                          }
+                        }
+
+                        var div_2 = document.createElement('div');
+                        div_2.setAttribute("class", "occupy_image");
+                        div_2.style.float = "left";
+                        div_2.style.width = "20%";
+                        document.getElementsByClassName('bar')[i].appendChild(div_2);
+
+                        var img = document.createElement('img');
+                        img.src = utm_f;
+                        img.style.width = "66px";
+                        img.style.height = "66px";
+                        img.style.padding = "17px";
+                        img.setAttribute("id", "Imge" + i);
+                        document.getElementsByClassName('occupy_image')[i].appendChild(img);
+
+                        var div_3 = document.createElement('div');
+                        div_3.setAttribute("class", "occupy_content");
+                        div_3.style.width = "76%";
+                        div_3.style.paddingBottom = "5px";
+                        div_3.style.float = "left";
+                        document.getElementsByClassName('bar')[i].appendChild(div_3);
+
+                        var div_4 = document.createElement('div');
+                        div_4.setAttribute("class", "cross");
+                        div_4.style.display = "none";
+                        div_4.style.paddingTop = "3px";
+                        div_4.style.width = "4%";
+                        div_4.style.float = "left";
+                        document.getElementsByClassName('bar')[i].appendChild(div_4);
+
+                        var close = document.createElement('button');
+                        close.setAttribute("id", "close" + i);
+                        close.style.color = "purple";
+                        close.style.backgroundColor = "rgb(240,240,240)";
+                        close.style.border = "none";
+                        close.style.paddingTop = "5px";
+                        close.style.paddingRight = "5px";
+                        close.style.paddingLeft = "0px";
+                        close.style.fontSize = "12px";
+                        close.style.cursor = "pointer";
+                        close.style.marginBottom = "0px";
+                        close.innerHTML = "&#10006";
+
+                        document.getElementsByClassName('cross')[i].appendChild(close);
+
+                        var heading = document.createElement('h6');
+                        heading.setAttribute("id", "bold" + i);
+                        heading.style.marginTop = "10px";
+                        heading.style.marginBottom = "0px";
+                        heading.style.marginRight = "10px";
+                        heading.innerHTML = t_f;
+                        document.getElementsByClassName('occupy_content')[i].appendChild(heading);
+
+                        var div_new = document.createElement('div');
+                        div_new.setAttribute("class", "occupy_content_new");
+                        //div_3.style.height = "100%";
+                        div_new.style.fontSize = "11px"
+                        div_new.style.display = "none";
+                        div_new.style.width = "100%";
+                        div_new.style.lineHeight = "1.4";
+                        div_new.innerHTML = "<b>Author:</b>&nbsp;" + a_f + "<br>" + "<b>Source:</b>&nbsp;" + s_f + "<br>" + "<b>Date:</b>&nbsp;" + pat_f.substring(0, 10) + "<br><span style='line-height: normal'>" + d_f + "</span>";
+                        document.getElementsByClassName('occupy_content')[i].appendChild(div_new);
+
+                        var para = document.createElement('div');
+                        para.style.fontSize = "11px";
+                        para.style.display = "block";
+                        para.setAttribute("class", "desc");
+                        para.style.width = "100%";
+                        crop = d_f.match(/.{1,60}(\s|$)/g)[0];
+                        while (crop.charAt(crop.length - 1) == " " || crop.charAt(crop.length - 1) == ".")
+                          crop = crop.substring(0, crop.length - 1);
+                        para.innerHTML = crop + "...";
+                        document.getElementsByClassName('occupy_content')[i].appendChild(para);
+
+                        var div_new1 = document.createElement('div');
+                        div_new1.setAttribute("class", "occupy_content_new1");
+                        div_new1.style.display = "none";
+                        div_new1.style.fontSize = "11px";
+                        div_new1.style.width = "100%";
+                        div_new1.innerHTML = "<br><a href='" + u_f + "' target='_blank'>See Original Post";
+                        div_new1.style.marginBottom = "5px";
+                        document.getElementsByClassName('occupy_content')[i].appendChild(div_new1);
+                      }
+                      if (obtained.length > count) {
+                        var div_button = document.createElement('div');
+                        div_button.setAttribute('id', "show_less");
+                        div_button.style.height = "20px";
+                        div_button.style.width = "90%";
+                        div_button.style.border = "none";
+                        div_button.style.margin = "12px";
+                        document.getElementById('list').appendChild(div_button);
+                        var button_text = document.createElement('button');
+                        button_text.style.backgroundColor = "rgb(240,240,240)";
+                        button_text.innerHTML = "Show Less";
+                        button_text.setAttribute("class", "green")
+                        button_text.style.border = "none";
+                        document.getElementById("show_less").appendChild(button_text);
+                      }
+
+                      var elements = document.getElementsByClassName('bar');
+                      var myFunction = function () {
+                        var att = this.getAttribute("number");
+                        document.getElementsByClassName('desc')[att].style.display = "none";
+                        document.getElementsByClassName('cross')[att].style.display = "initial";
+                        document.getElementsByClassName('bar')[att].style.cursor = "text";
+                        document.getElementsByClassName('occupy_content_new')[att].style.display = "initial";
+                        document.getElementsByClassName('occupy_content_new1')[att].style.display = "initial";
+                      };
+
+                      for (var i = 5; i < elements.length; i++) {
+                        elements[i].addEventListener('click', myFunction);
+                      }
+
+                      var cross = document.getElementsByClassName('cross');
+                      var myFunction_2 = function () {
+                        var att = this.parentElement;
+                        att.getElementsByClassName('desc')[0].style.display = "initial";
+                        att.getElementsByClassName('cross')[0].style.display = "none";
+                        att.style.cursor = "pointer";
+                        att.getElementsByClassName('occupy_content_new')[0].style.display = "none";
+                        att.getElementsByClassName('occupy_content_new1')[0].style.display = "none";
+                        event.stopPropagation();
+                      };
+
+                      for (var m = 0; m < cross.length; m++) {
+                        cross[m].addEventListener('click', myFunction_2);
+                      }
+                      document.getElementById("show_less").addEventListener("click",
+                        function () {
+                          var elements = document.getElementsByClassName('bar');
+                          this.parentNode.removeChild(this);
+                          for (m = elements.length - 1; m > 4; m--) {
+                            elements[m].parentNode.removeChild(elements[m]);
+                          }
+                          document.getElementById('show_more').style.display = "block";
+                        }
+                      );
+                    });
+                  }
+                }
+              }
+            }
+            catch
+            {
+
+            }
+          }
+        };
+        xmlhttp.open("GET", url, true);
+        try {
+          xmlhttp.send();
+        }
+        catch
+        {
+
+        }
+        return false;
+      }
+    }
+  </script>
+  <div id="Search" style="display: none;">
+    <table style="width: 100%;" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="15px">&nbsp;</td>
+        <td style="width: 778;">&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td style="width: 778;">
+          <table style="width: 100%;" cellspacing="0" cellpadding="0">
+            <tr>
+              <td width="18%" style="position: fixed;"><span onclick="show_goog()" class="green"
+                  style="background-color:rgb(240,240,240); display: inline-block;  padding: 10px; border-top-left-radius : 4px; border-top-right-radius: 4px;  font-size: 13px;">&nbsp;&nbsp;&nbsp;&nbsp;Google
+                  News&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <br>
+                <span class="green"
+                  style="background-color: rgb(105, 104, 104); display: inline-block;  padding: 10px;  border-bottom-left-radius : 3px; border-bottom-right-radius: 3px; color: white;  font-size: 13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Search&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              </td>
+              <td style="width: 4%;">&nbsp;</td>
+              <td style="width: 78%;">
+                <form name="my_form">
+                  <div class="details"
+                    style="width: 96%; border-top-left-radius: 5px; border-top-right-radius: 5px; font-size: 11px;">
+                    <br>&nbsp;&nbsp;&nbsp;Keyword<span class="mand">*</span>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text"
+                      name="keyword" size="10" required />
+                    &nbsp;&nbsp;&nbsp;&nbsp;From<span class="mand">*</span>&nbsp;&nbsp;&nbsp;&nbsp;<input type="date"
+                      name="from" id="from" required />
+                    &nbsp;&nbsp;&nbsp;&nbsp;To<span class="mand">*</span>&nbsp;&nbsp;&nbsp;&nbsp;<input type="date"
+                      name="to" id="to" required />
+                  </div>
+                  <div class="details" id="cen" style="width: 96%;  font-size: 11px;">
+                    <br>Category&nbsp;&nbsp;&nbsp;&nbsp;
+                    <select id="content" name="content" onchange="populate(this.id, 'source')"
+                      style="width: 120px; text-align-last: center;">
+                      <option selected>all</option>
+                      <option>business</option>
+                      <option>entertainment</option>
+                      <option>general</option>
+                      <option>health</option>
+                      <option>science</option>
+                      <option>sports</option>
+                      <option>technology</option>
+                    </select>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Source&nbsp;&nbsp;&nbsp;&nbsp;
+                    <select id="source" name="source" style="width: 120px; text-align-last: center;">
+                    </select>
+                    <script>
+                      initial();
+                      function initial() {
+                        today = new Date();
+                        before = today - (1000 * 60 * 60 * 24 * 7);
+                        before1 = new Date(before);
+
+                        y = before1.getFullYear();
+                        m = before1.getMonth() + 1;
+                        d = before1.getDate();
+                        if (m < 10)
+                          m = "0" + m;
+                        if (d < 10)
+                          d = "0" + d;
+
+                        document.getElementById("from").value = y + "-" + m + "-" + d;
+
+                        y1 = today.getFullYear();
+                        m1 = today.getMonth() + 1;
+                        d1 = today.getDate();
+                        if (m1 < 10)
+                          m1 = "0" + m1;
+                        if (d1 < 10)
+                          d1 = "0" + d1;
+
+                        document.getElementById("to").value = y1 + "-" + m1 + "-" + d1;
+                      }
+                      var s = document.getElementById('source');
+                      var url = '/sources2?category=all';
+
+                      xmlhttp = new XMLHttpRequest();
+                      xmlhttp.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                          jsonObj = JSON.parse(xmlhttp.responseText);
+                          newz_channel = jsonObj.channel;
+
+                          var k = 0;
+                          var a;
+                          var newOption = document.createElement('option');
+                          newOption.innerHTML = "all";
+                          newOption.value = "all";
+                          s.options.add(newOption);
+                          for (i = 0; i < newz_channel.length; i++) {
+                            channelNodeList = newz_channel[i];
+                            var channel_keys = Object.keys(channelNodeList);
+                            var newOption = document.createElement('option');
+                            for (j = 0; j < channel_keys.length; j++) {
+                              prop = channel_keys[j];
+                              if (channel_keys[j] == "name") {
+                                newOption.innerHTML = channelNodeList[prop];
+                              }
+                              if (channel_keys[j] == "id") {
+                                newOption.value = channelNodeList[prop];
+                              }
+                            }
+                            s.options.add(newOption);
+                          }
+                        }
+                      };
+                      xmlhttp.open("GET", url, true);
+                      try {
+                        xmlhttp.send();
+                      }
+                      catch
+                      {
+
+                      }
+                    </script>
+                  </div>
+                  <div class="details"
+                    style="width: 96%; text-align: center; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+                    <br>
+                    <button class="green" type="submit" value="Search"
+                      style="border: none; height: 20px; width: 50px; font-size: 12px;"
+                      onclick="get_news(this.form); return false;">Search</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input class="green" type="button" name="Clear" value="Clear" onclick="clear_field(this.form);"
+                      style="border: none; height: 20px; width: 50px; font-size: 12px;" />
+                    <br>&nbsp;
+                  </div>
+                </form>
+                <script>
+                  function clear_field(z) {
+                    z.reset();
+                    initial();
+                    var elements = document.getElementsByClassName('bar');
+                    for (m = elements.length - 1; m >= 0; m--) {
+                      elements[m].parentNode.removeChild(elements[m]);
+                    }
+                    document.getElementById('show_more').style.display = "none";
+                    document.getElementById('show_less').style.display = "none";
+                  }
+                </script>
+              </td>
+            </tr>
+            <tr>
+              <td width="18%">&nbsp;</td>
+              <td width="4%">&nbsp;</td>
+              <td width="78%" style="padding-left: 30px;">
+                <div style="width: 100%; height: 100%;" id="list">
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="width: 18%;"></td>
+              <td style="width: 4%;"></td>
+              <td style="width: 78%;"></td>
+            </tr>
+          </table>
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="24"></td>
+        <td style="width: 778;">&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>
